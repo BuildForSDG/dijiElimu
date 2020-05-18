@@ -2,8 +2,6 @@ from django.db import models
 
 from django.utils import timezone
 
-from django.db import models
-
 from embed_video.fields import EmbedVideoField
 
 class Department(models.Model):
