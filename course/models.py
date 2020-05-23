@@ -4,42 +4,55 @@ from django.utils import timezone
 
 from embed_video.fields import EmbedVideoField
 
+
 class Department(models.Model):
     title = models.CharField(max_length=100)
-    department_code = models.IntegerField(verbose_name='department name',default=0, unique=True)
-    blog = models.TextField(max_length=500, default="Hundreds of teachers have gone through our system and become qualified teachers of information technology. Study with us today")
+    department_code = models.IntegerField(verbose_name='department name', default=0, unique=True)
+    blog = models.TextField(max_length=500,
+                            default="Hundreds of teachers have gone through our system and become qualified teachers "
+                                    "of information technology. Study with us today")
 
-class Course(models.Model):   
+    def __str__(self):
+        """'return formatted string"""
+        return self.title
+
+
+class Course(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     course_name = models.CharField(verbose_name='course name', max_length=100, unique=True)
     course_code = models.IntegerField(verbose_name='course code', default=0, unique=True)
     approved = models.BooleanField(default=False)
     published_date = models.DateTimeField(verbose_name='published date', default=timezone.now)
     updated_date = models.DateTimeField(default=timezone.now)
-    image= models.ImageField(upload_to='images', null=True)
-    blog = models.TextField(max_length=500, default="Hundreds of teachers have gone through our system and become qualified teachers of information technology. Study with us today")
+    image = models.ImageField(upload_to='images', null=True)
+    blog = models.TextField(max_length=500,
+                            default="Hundreds of teachers have gone through our system and become qualified teachers "
+                                    "of information technology. Study with us today")
 
     def __str__(self):
+        """'return formatted string"""
         return self.course_name
+
 
 class Unit(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     unit_name = models.CharField(verbose_name='unit name', max_length=100)
-    unit_code = models.IntegerField(verbose_name='unit code',default=0, unique=True)
+    unit_code = models.IntegerField(verbose_name='unit code', default=0, unique=True)
     student = models.CharField(max_length=100)
     video_url = EmbedVideoField()
     video_id = models.CharField(blank=False, max_length=32)
     file_name = models.CharField(max_length=500)
     Tutor = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
-    
 
     def __str__(self):
+        """'return formatted string"""
         return self.unit_name
+
 
 class Video(models.Model):
     code = models.IntegerField(unique=True)
-    title = models.CharField(max_length=100)
+    unit_title = models.CharField(max_length=100)
     video_url = EmbedVideoField()
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     published = models.BooleanField(default=False)
@@ -47,7 +60,9 @@ class Video(models.Model):
     updatedAt = models.DateField(auto_now_add=True)
 
     def __str__(self):
+        """'return formatted string"""
         return self.unit_title
+
 
 class Book(models.Model):
     book_title = models.CharField(verbose_name='book title', max_length=100)
@@ -59,4 +74,5 @@ class Book(models.Model):
     updatedAt = models.DateField(default=timezone.now)
 
     def __str__(self):
+        """'return formatted string"""
         return self.book_title
