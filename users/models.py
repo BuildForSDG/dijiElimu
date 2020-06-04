@@ -9,32 +9,26 @@ class User(AbstractUser):
     username = models.CharField(
         verbose_name='username', max_length=100, blank=True, unique=True)
     first_name = models.CharField(verbose_name='first name', max_length=100)
-    last_name = models.CharField(verbose_name='second name', max_length=100)
-    phone_number = models.CharField(verbose_name='phone number', max_length=10)
-    created_at = models.DateField(auto_now_add=True)
+    last_name = models.CharField(verbose_name='last name', max_length=100)
+    date_of_birth = models.DateField(blank=True, null=True)
+    mobile = models.CharField(max_length=11, blank=True, null=True)
+    photo = models.ImageField(upload_to='users/photos',
+                              default='useravatar.png')
+    education_level = models.CharField(
+        verbose_name='education level', max_length=100, null=True)
+    designation = models.CharField(blank=True, max_length=100)
+    expertise = models.CharField(
+        blank=True, max_length=255, verbose_name='expert_in')
+    stripe_user_id = models.CharField(max_length=255, blank=True)
+    stripe_access_token = models.CharField(max_length=255, blank=True)
+    joining_date = models.DateField(auto_now_add=True)
+    registration_number = models.CharField(
+        max_length=6, null=True, unique=True)
+    guardian_mobile = models.CharField(max_length=11, blank=True, null=True)
+    is_seller = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
     is_tutor = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.second_name}'
-
-
-class Student(models.Model):
-    """model for Student."""
-
-    major = models.CharField(max_length=100)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.first_name} {self.second_name}'
-
-
-class Tutor(models.Model):
-    """model for Tutor."""
-
-    education_level = models.CharField(
-        verbose_name='education level', max_length=100)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.first_name} {self.second_name}'
+        return f'{self.first_name} {self.last_name}'

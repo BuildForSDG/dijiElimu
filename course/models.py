@@ -1,16 +1,17 @@
 from django.db import models
-
 from django.utils import timezone
-
 from embed_video.fields import EmbedVideoField
 
 
 class Department(models.Model):
     title = models.CharField(max_length=100)
-    department_code = models.IntegerField(verbose_name='department name', default=0, unique=True)
-    blog = models.TextField(max_length=500,
-                            default="Hundreds of teachers have gone through our system and become qualified teachers "
-                                    "of information technology. Study with us today")
+    department_code = models.IntegerField(
+        verbose_name='department name', default=0, unique=True)
+    blog = models.TextField(
+        max_length=500,
+        default="""Hundreds of teachers have gone
+        through our system and become qualified
+        teachers of information technology. Study with us today""")
 
     def __str__(self):
         """'return formatted string"""
@@ -19,15 +20,37 @@ class Department(models.Model):
 
 class Course(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    course_name = models.CharField(verbose_name='course name', max_length=100, unique=True)
-    course_code = models.IntegerField(verbose_name='course code', default=0, unique=True)
+    course_name = models.CharField(
+        verbose_name='course name', max_length=100, unique=True)
+    course_code = models.IntegerField(
+        verbose_name='course code', default=0, unique=True)
     approved = models.BooleanField(default=False)
-    published_date = models.DateTimeField(verbose_name='published date', default=timezone.now)
+    published_date = models.DateTimeField(
+        verbose_name='published date', default=timezone.now)
     updated_date = models.DateTimeField(default=timezone.now)
-    image = models.ImageField(upload_to='images', null=True)
-    blog = models.TextField(max_length=500,
-                            default="Hundreds of teachers have gone through our system and become qualified teachers "
-                                    "of information technology. Study with us today")
+    image = models.ImageField(
+        upload_to='images', null=True)
+    blog = models.TextField(
+        max_length=500,
+        default="""Hundreds of teachers
+        have gone through our system and
+        become qualified teachers of information
+        technology. Study with us today""")
+    price = models.DecimalField(
+        max_digits=8, decimal_places=2, default=0.00)
+    fee = models.DecimalField(
+        max_digits=8, decimal_places=2, default=0.00)
+    enrolled_students = models.ManyToManyField(
+        'users.User', through='subscription.Subscription'
+    )
+    tutor = models.ManyToManyField(
+        'users.User',
+        related_name='courses_asigned'
+    )
+
+    @staticmethod
+    def unsubscribe(current_user, course):
+        course.enrolled_students.remove(current_user)
 
     def __str__(self):
         """'return formatted string"""
@@ -37,7 +60,8 @@ class Course(models.Model):
 class Unit(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     unit_name = models.CharField(verbose_name='unit name', max_length=100)
-    unit_code = models.IntegerField(verbose_name='unit code', default=0, unique=True)
+    unit_code = models.IntegerField(
+        verbose_name='unit code', default=0, unique=True)
     student = models.CharField(max_length=100)
     video_url = EmbedVideoField()
     video_id = models.CharField(blank=False, max_length=32)
