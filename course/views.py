@@ -1,5 +1,11 @@
 from rest_framework import viewsets
-from .serializers import DepartmentSerializer, CourseSerializer, UnitSerializer, VideoSerializer, BookSerializer
+from .serializers import (
+    DepartmentSerializer,
+    CourseSerializer,
+    UnitSerializer,
+    VideoSerializer,
+    BookSerializer
+)
 
 from .models import Department, Course, Unit, Video, Book
 
@@ -12,6 +18,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
+    queryset = CourseSerializer.setup_eager_loading(queryset=queryset)
 
 
 class UnitViewSet(viewsets.ModelViewSet):
