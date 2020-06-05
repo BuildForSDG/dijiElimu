@@ -1,0 +1,1 @@
+web: gunicorn dijielimu.wsgi --log-file -
