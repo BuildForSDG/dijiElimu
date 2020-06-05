@@ -1,0 +1,1 @@
+web: gunicorn digielimu.wsgi --log-file -
