@@ -3,25 +3,26 @@ from django.utils import timezone
 from embed_video.fields import EmbedVideoField
 
 
-class Department(models.Model):
-    title = models.CharField(max_length=100)
-    department_code = models.IntegerField(
-        verbose_name='department name', default=0, unique=True)
-    blog = models.TextField(
-        max_length=500,
-        default="""Hundreds of teachers have gone
-        through our system and become qualified
-        teachers of information technology. Study with us today""")
+class Unit(models.Model):
+    unit_name = models.CharField(verbose_name='unit name', max_length=100)
+    unit_code = models.IntegerField(
+        verbose_name='unit code', default=0, unique=True)
+    student = models.CharField(max_length=100)
+    video_url = EmbedVideoField()
+    video_id = models.CharField(blank=False, max_length=32)
+    file_name = models.CharField(max_length=500)
+    Tutor = models.CharField(max_length=100)
+    department = models.CharField(max_length=100)
 
     def __str__(self):
         """'return formatted string"""
-        return self.title
+        return self.unit_name
 
 
 class Course(models.Model):
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     course_name = models.CharField(
         verbose_name='course name', max_length=100, unique=True)
+    units = models.ManyToManyField(Unit)
     course_code = models.IntegerField(
         verbose_name='course code', default=0, unique=True)
     approved = models.BooleanField(default=False)
@@ -57,21 +58,20 @@ class Course(models.Model):
         return self.course_name
 
 
-class Unit(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    unit_name = models.CharField(verbose_name='unit name', max_length=100)
-    unit_code = models.IntegerField(
-        verbose_name='unit code', default=0, unique=True)
-    student = models.CharField(max_length=100)
-    video_url = EmbedVideoField()
-    video_id = models.CharField(blank=False, max_length=32)
-    file_name = models.CharField(max_length=500)
-    Tutor = models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
+class Department(models.Model):
+    title = models.CharField(max_length=100)
+    department_code = models.IntegerField(
+        verbose_name='department name', default=0, unique=True)
+    blog = models.TextField(
+        max_length=500,
+        default="""Hundreds of teachers have gone
+        through our system and become qualified
+        teachers of information technology. Study with us today""")
+    course = models.ManyToManyField(Course)
 
     def __str__(self):
         """'return formatted string"""
-        return self.unit_name
+        return self.title
 
 
 class Video(models.Model):
